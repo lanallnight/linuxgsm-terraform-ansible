@@ -1,0 +1,46 @@
+- name: Show operating system version and family
+  ansible.builtin.debug:
+    msg: >-
+      {{ inventory_hostname }} =>
+      {{ ansible_distribution }}
+      {{ ansible_distribution_version }}
+      {{ ansible_distribution_release }}
+      {% if ansible_distribution_file_variety is defined %}
+      ({{ ansible_distribution_file_variety }})
+      {% else %}
+      (variety not defined)
+      {% endif %}
+
+- name: Show facts
+  when: show_facts|default(false) is true
+  block:
+    - name: Show ansible facts per host
+      ansible.builtin.debug:
+        var: hostvars[inventory_hostname]
+
+- name: Save facts
+  when: save_facts|default(true) is true
+  block:
+    - name: Create playbooks tmp facts directory
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/tmp/facts"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Save all facts to individual file per host
+      ansible.builtin.copy:
+        content: "{{ ansible_facts | to_nice_json }}"
+        dest: "{{ playbook_dir }}/tmp/facts/{{ inventory_hostname }}.json"
+      delegate_to: localhost
+      become: false
+      when: format_facts|default('json') == 'json'
+
+    - name: Save all facts to individual file per host
+      ansible.builtin.copy:
+        content: "{{ ansible_facts | to_nice_yaml }}"
+        dest: "{{ playbook_dir }}/tmp/facts/{{ inventory_hostname }}.yml"
+      delegate_to: localhost
+      become: false
+      when: format_facts|default('json') == 'yml'

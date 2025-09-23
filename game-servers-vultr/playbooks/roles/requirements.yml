@@ -1,0 +1,6 @@
+---
+- name: ansible-role-linuxgsm
+  src: git@github.com:lanallnight/linuxgsm-terraform-ansible/
+  scm: git
+  version: main
+  path: ansible-role-linuxgsm

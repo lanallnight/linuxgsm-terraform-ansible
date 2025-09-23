@@ -1,0 +1,6 @@
+Host app_${server_instance_label}
+    HostName ${server_instance_public_ip}
+    User root
+    IdentityFile ~/.ssh/${game_server_type}_id_ed25519.pem
+    IdentitiesOnly yes
+    PasswordAuthentication no

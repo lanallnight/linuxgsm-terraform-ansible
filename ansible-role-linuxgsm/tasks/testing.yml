@@ -1,0 +1,14 @@
+---
+# ansible-playbook -i 'oci-zdroidbox-app-art-zdroidbox-art-1,' testing.yml -e "ansible_user=zimperium" -vvv -e "deploy_sh_type=main" -e "bridge_name=zdbox-network" -e "emulator_count=4"
+- name: Install LinuxGSM
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Wait for more than 1 new items in /var/tmp/results/ within 2 minutes
+      ansible.builtin.shell: "ls /var/tmp/results/ | wc -l"
+      register: current_count
+      until: (current_count.stdout | int) > 1
+      retries: 60  # Retry up to 60 times (2 minutes at 2-second intervals)
+      delay: 10  # Delay of 2 seconds between retries
+      changed_when: False
+      ignore_errors: True

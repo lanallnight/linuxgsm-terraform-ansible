@@ -1,0 +1,11 @@
+# export SSH_KEY="$HOME/Documents/keys/devops2-p9.pem"
+# ssh-add ${SSH_KEY}
+# ansible-galaxy install -p roles/ -r roles/requirements.yml -f
+# ansible-playbook -i 129.146.61.192, -u ubuntu playbook.yml
+---
+- name: Converge
+  hosts: servers
+  gather_facts: true
+  roles:
+    - role: ansible-role-linuxgsm
+      when: run_role is not defined or run_role == 'linuxgsm-role.yml'

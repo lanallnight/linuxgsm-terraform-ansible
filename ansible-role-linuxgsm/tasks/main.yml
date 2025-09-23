@@ -1,0 +1,39 @@
+---
+- name: Debug install_essentials
+  ansible.builtin.debug:
+    msg: "install_essentials is {{ install_essentials }}"
+
+- name: Debug linuxgsm
+  ansible.builtin.debug:
+    msg: "linuxgsm is {{ linuxgsm }}"
+
+- name: Debug load_configs
+  ansible.builtin.debug:
+    msg: "load_configs is {{ load_configs }}"
+
+- name: Debug start_services
+  ansible.builtin.debug:
+    msg: "start_services is {{ start_services }}"
+
+- name: Install essentials for LinuxGSM
+  ansible.builtin.include_tasks:
+    file: essentials.yml
+  when: install_essentials
+  register: essentials_result
+
+- name: Load and Run LinuxGSM Server Files (simplified condition for testing)
+  ansible.builtin.include_tasks:
+    file: linuxgsm.yml
+  when: linuxgsm and essentials_result is succeeded
+  register: linuxgsm_result
+
+- name: Load Configs for LinuxGSM Server Files
+  ansible.builtin.include_tasks:
+    file: load_configs.yml
+  when: load_configs and linuxgsm_result is succeeded
+  register: config_result
+
+- name: Start LinuxGSM
+  ansible.builtin.include_tasks:
+    file: start_services.yml
+  when: start_services and config_result is succeeded

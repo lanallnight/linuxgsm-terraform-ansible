@@ -1,0 +1,8 @@
+game_server_type: "{{ lookup('env', 'GAME_SERVER_TYPE') }}"
+steam_username: "{{ lookup('env', 'STEAM_USERNAME') }}"
+steam_password: "{{ lookup('env', 'STEAM_PASSWORD') }}"
+game_server_private_password: "{{ lookup('env', 'GAME_SERVER_PRIVATE_PASSWORD') }}"
+cs2server_id_hash: "{{ lookup('env', 'CS2SERVER_ID_HASH') }}"
+csgo_id_hash: "{{ lookup('env', 'CSGO_ID_HASH') }}"
+tf2_id_hash: "{{ lookup('env', 'TF2_ID_HASH') }}"
+discord_webhook: "{{ lookup('env', 'DISCORD_WEBHOOK') }}"

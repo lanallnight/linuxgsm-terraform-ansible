@@ -1,0 +1,12 @@
+# Update this to just include the maps we usually play. Bouv gave that one good example the other day
+# specify 1 map per line, mapname|factoryid
+# ex: aerowalk|iffa
+# see factories.txt for valid factory id values
+spacecamp|ift
+longestyard|iffa
+troubledwaters|ictf
+japanesecastles|ictf
+cliffside|infected
+coldwar|ift
+overlord|infected
+wintersedge|ifc

@@ -1,0 +1,5 @@
+[servers]
+${server_instance_label} ansible_host=${server_instance_public_ip} ansible_user=root
+
+[servers:vars]
+ansible_ssh_common_args='-i ${server_instance_key}'

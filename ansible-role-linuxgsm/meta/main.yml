@@ -1,0 +1,16 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: ansible_role_linuxgsm
+  author: lanallnight
+  description: linuxgsm game servers
+  company: "LAN ALL NIGHT"
+  license: "license (BSD, MIT)"
+  min_ansible_version: "2.13"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy #22.04 LTS
+  galaxy_tags:
+    - linuxgsm

@@ -1,0 +1,100 @@
+- name: Create game server user
+  user:
+    name: "{{ game_server_type }}"
+    comment: "linuxgsm"
+    shell: /bin/bash
+    create_home: yes
+
+- name: Ensure home directory exists with correct permissions
+  file:
+    path: "/home/{{ game_server_type }}"
+    state: directory
+    owner: "{{ game_server_type }}"
+    group: "{{ game_server_type }}"
+    mode: '0755'
+
+- name: Download LinuxGSM script
+  get_url:
+    url: https://linuxgsm.sh
+    dest: /home/{{ game_server_type }}/linuxgsm.sh
+    owner: "{{ game_server_type }}"
+    mode: '0755'
+  become: yes
+  become_user: "{{ game_server_type }}"
+
+- name: Install LinuxGSM
+  command: ./linuxgsm.sh {{ game_server_type }}
+  args:
+    chdir: /home/{{ game_server_type }}
+  become: yes
+  become_user: "{{ game_server_type }}"
+
+- name: Custom steps for terrariaserver
+  block:
+    - name: Append Steam credentials to terrariaserver config
+      lineinfile:
+        path: "/home/{{ game_server_type }}/lgsm/config-lgsm/terrariaserver/common.cfg"
+        create: yes
+        line: "{{ item }}"
+      loop:
+        - "steamuser={{ steam_username }}"
+        - "steampass={{ steam_password }}"
+
+    - name: Run auto-install and validate for terrariaserver
+      command: "./{{ game_server_type }} auto-install && ./{{ game_server_type }} validate"
+      args:
+        chdir: /home/{{ game_server_type }}
+      become_user: "{{ game_server_type }}"
+  when: game_server_type == "terrariaserver"
+
+- name: Run auto-install
+  command: "./{{ game_server_type }} auto-install &&"
+  args:
+    chdir: /home/{{ game_server_type }}
+  become: yes
+  become_user: "{{ game_server_type }}"
+  register: auto_install_result
+
+- name: Output stdout from auto-install
+  ansible.builtin.debug:
+    msg: "stdout: {{ auto_install_result.stdout }}"
+
+- name: Run Validate
+  command: "./{{ game_server_type }} validate &&"
+  args:
+    chdir: /home/{{ game_server_type }}
+  become: yes
+  become_user: "{{ game_server_type }}"
+
+- name: Set server configuration
+  lineinfile:
+    path: "/home/{{ game_server_type }}/lgsm/config-lgsm/{{ game_server_type }}/common.cfg"
+    create: yes
+    line: "{{ item }}"
+  loop:
+    #- "hostname 'LANallNIGHT'"
+    - "discordalert=on"
+    - "discordwebhook={{ discord_webhook }}"
+  become_user: "{{ game_server_type }}"
+
+- name: Set specific game server configuration
+  block:
+    - name: Configure CS2 server
+      lineinfile:
+        path: /home/cs2server/serverfiles/game/csgo/cfg/csgoserver.cfg
+        create: yes
+        line: "sv_setsteamaccount {{ cs2server_id_hash }}"
+      notify: Change ownership for cs2server
+
+    - name: Configure CS:GO server
+      lineinfile:
+        path: /home/csgoserver/serverfiles/csgo/cfg/csgoserver.cfg
+        create: yes
+        line: "sv_setsteamaccount {{ csgo_id_hash }}"
+
+    - name: Configure TF2 server
+      lineinfile:
+        path: /home/tf2server/serverfiles/tf2/cfg/tf2server.cfg
+        create: yes
+        line: "sv_setsteamaccount {{ tf2_id_hash }}"
+  when: game_server_type in ["cs2server", "csgoserver", "tf2server"]

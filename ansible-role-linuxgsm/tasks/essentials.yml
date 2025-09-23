@@ -1,0 +1,72 @@
+---
+# tasks/main.yml
+
+- name: Disable firewall
+  ufw:
+    state: disabled
+
+- name: Add i386 architecture
+  command: dpkg --add-architecture i386
+  register: dpkg_result
+  changed_when: false
+  async: 300  # Allows up to 5 minutes (300 seconds) for the task to complete
+  poll: 5     # Poll every 5 seconds to check if the task has completed
+
+- name: Wait for i386 architecture to be added
+  wait_for:
+    path: /var/lib/dpkg/arch
+    search_regex: i386
+    timeout: 300  # Wait for up to 5 minutes for the architecture to be added
+  register: wait_result
+
+- name: Pre-accept Steam License Agreement
+  debconf:
+    name: "steamcmd"
+    question: "steam/license"
+    value: "true"
+    vtype: "boolean"
+
+- name: Set debconf selections for SteamCMD
+  debconf:
+    name: steam
+    question: "{{ item.question }}"
+    vtype: note
+    value: "{{ item.value }}"
+  loop:
+    - { question: "steam/question", value: "I AGREE" }
+    - { question: "steam/license", value: "" }
+
+- name: Update apt cache after adding i386 architecture
+  apt:
+    update_cache: yes
+
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - wget
+    - file
+    - tar
+    - bzip2
+    - gzip
+    - unzip
+    - tmux
+    - acl
+    # - bsdmainutils
+    # - python3
+    # - util-linux
+    # - ca-certificates
+    # - binutils
+    # - bc
+    # - jq 
+    # - netcat
+    # - lib32gcc-s1
+    # - lib32stdc++6
+    # - libsdl2-2.0-0:i386
+    # - libcurl4-gnutls-dev:i386
+    # - openjdk-17-jre
+    # - openjdk-21-jre #This is the one it wants to install
+    # - steamcmd
+    # - pigz

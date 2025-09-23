@@ -1,0 +1,27 @@
+- name: Start game server
+  command: "./{{ game_server_type }} start"
+  args:
+    chdir: /home/{{ game_server_type }}
+  become: yes
+  become_user: "{{ game_server_type }}"
+  register: start_result
+  failed_when: start_result.rc != 0 and "is already running" not in start_result.stdout
+
+- name: Monitor game server
+  command: "./{{ game_server_type }} monitor"
+  args:
+    chdir: /home/{{ game_server_type }}
+  become: yes
+  become_user: "{{ game_server_type }}"
+  register: monitor_result
+  failed_when: monitor_result.rc != 0 and "already running" not in monitor_result.stdout
+
+- name: Run test alerts if Discord webhook is configured
+  command: "./{{ game_server_type }} ta"
+  args:
+    chdir: /home/{{ game_server_type }}
+  become: yes
+  become_user: "{{ game_server_type }}"
+  register: ta_result
+  when: discord_webhook is defined and discord_webhook != ""
+  failed_when: false  # Don't fail the playbook if alerts aren't configured correctly

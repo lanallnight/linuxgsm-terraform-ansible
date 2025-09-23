@@ -1,0 +1,18 @@
+# ignore terraform state
+.terraform
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+terraform.tfstate*
+
+# ignore credentials terraform vars and script files
+*credentials*.tfvars
+*credentials*.sh
+
+# ignore tmp folder
+tmp/*
+temp/*
+
+# ignore terraform generated ansible inventory
+inventory.ini
+
+roles/ansible-role-linuxgsm

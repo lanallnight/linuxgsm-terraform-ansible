@@ -1,0 +1,7 @@
+# CODEOWNERS
+# This file defines individuals or teams that are responsible for code in this repository.
+# Each line is a file pattern followed by one or more owners.
+# These owners will be the default assignees for pull requests.
+
+# Global ownership - require approval from server team for all files
+* @lanallnight/server

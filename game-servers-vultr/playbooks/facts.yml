@@ -1,0 +1,11 @@
+---
+- name: Ansible Facts
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Get and save ansible facts to file for each host
+      ansible.builtin.include_tasks:
+        file: tasks/ansible-facts.yml
+      when:
+        - run_task is defined and run_task is search ('ansible-facts')

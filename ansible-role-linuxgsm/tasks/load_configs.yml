@@ -1,0 +1,9 @@
+---
+- name: Copy game server files to the remote machine
+  copy:
+    src: "{{ role_path }}/files/{{ game_server_type }}/"
+    dest: "/home/{{ game_server_type }}/"
+    owner: "{{ game_server_type }}"
+    group: "{{ game_server_type }}"
+    mode: '0755'
+    remote_src: no
