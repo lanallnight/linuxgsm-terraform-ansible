@@ -5,7 +5,7 @@
 - [ ] 🐛 Bug fix  - [ ] ✨ New feature  - [ ] 💥 Breaking change  - [ ] 📚 Documentation  - [ ] 🎮 New game server
 
 ## 🎮 Game Servers Affected
-- [ ] Minecraft  - [ ] TF2  - [ ] Quake Live  - [ ] PalWorld  - [ ] CS2/CSGO  - [ ] Other: _____
+- [ ] Minecraft  - [ ] Quake Live  - [ ] Other: _____
 
 ## 🧪 Testing
 - [ ] `terraform validate` passed
