@@ -1,5 +1,5 @@
 ---
-# ansible-playbook -i 'oci-zdroidbox-app-art-zdroidbox-art-1,' testing.yml -e "ansible_user=zimperium" -vvv -e "deploy_sh_type=main" -e "bridge_name=zdbox-network" -e "emulator_count=4"
+# ansible-playbook -i 'instance-one,' testing.yml -e "ansible_user=ubuntu" -vvv -e "deploy_sh_type=main" -e "bridge_name=xxxx-network"
 - name: Install LinuxGSM
   hosts: all
   gather_facts: true
