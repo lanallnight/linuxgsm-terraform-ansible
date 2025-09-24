@@ -153,4 +153,6 @@ variable "region" {
 variable "os_id" {
   default = "1743"
 }
-variable "snapshot_id" {}
+variable "snapshot_id" {
+  default = ""
+}
