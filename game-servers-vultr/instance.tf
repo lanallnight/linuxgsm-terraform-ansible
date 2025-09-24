@@ -5,7 +5,7 @@ locals {
     workspace   = terraform.workspace
   }
 
-  tags = merge({"name" = "My Custom Var"}, local.required_tags)
+  tags         = merge({ "name" = "My Custom Var" }, local.required_tags)
   tags_as_list = [for k, v in local.tags : "${k}=${v}"]
 }
 
@@ -41,8 +41,8 @@ resource "vultr_firewall_rule" "ssh_security_group" {
 }
 
 resource "vultr_firewall_rule" "game_security_group_tcp" {
-  count             = length(local.game_server_ports[var.game_server_type])
-  
+  count = length(local.game_server_ports[var.game_server_type])
+
   firewall_group_id = vultr_firewall_group.this.id
   protocol          = "tcp"
   ip_type           = "v4"
@@ -54,8 +54,8 @@ resource "vultr_firewall_rule" "game_security_group_tcp" {
 }
 
 resource "vultr_firewall_rule" "game_security_group_udp" {
-  count             = length(local.game_server_ports[var.game_server_type])
-  
+  count = length(local.game_server_ports[var.game_server_type])
+
   firewall_group_id = vultr_firewall_group.this.id
   protocol          = "udp"
   ip_type           = "v4"
@@ -72,12 +72,12 @@ resource "vultr_ssh_key" "this" {
 }
 
 resource "vultr_instance" "server_instance" {
-  label             = "instance-${var.game_server_type}"
-  plan              = var.instance_size
-  region            = var.region
+  label  = "instance-${var.game_server_type}"
+  plan   = var.instance_size
+  region = var.region
   # Conditionally select snapshot_id or os_id
-  os_id       = var.snapshot_id != "" ? null : var.os_id
-  snapshot_id = var.snapshot_id != "" ? var.snapshot_id : null
+  os_id             = var.snapshot_id != "" ? null : var.os_id
+  snapshot_id       = var.snapshot_id != "" ? var.snapshot_id : null
   enable_ipv6       = true
   firewall_group_id = vultr_firewall_group.this.id
   ssh_key_ids       = [vultr_ssh_key.this.id]
@@ -126,9 +126,9 @@ resource "null_resource" "setup-sudo" {
     ]
     connection {
       type        = "ssh"
-      user        = "${var.ssh_user}"
+      user        = var.ssh_user
       private_key = file("${local.home_dir}/.ssh/${var.game_server_type}_id_ed25519.pem")
-      host        = "${vultr_instance.server_instance.main_ip}"
+      host        = vultr_instance.server_instance.main_ip
       #bastion_host = "${var.bastion_host}" # Optional if you're using a bastion
     }
   }
@@ -136,11 +136,11 @@ resource "null_resource" "setup-sudo" {
   depends_on = [
     vultr_instance.server_instance,
     null_resource.app-instance-ready
-    ]
+  ]
 }
 
 variable "ssh_user" {
-  type = string
+  type    = string
   default = "root"
 }
 

@@ -15,7 +15,7 @@ resource "null_resource" "add_ssh_key_to_ssh_folder" {
 # Add a step to upload these to an S3 bucket
 
 locals {
-  home_dir = "${join("/", slice(split("/", path.cwd), 0, 3))}"
+  home_dir = join("/", slice(split("/", path.cwd), 0, 3))
 }
 
 resource "local_file" "ssh_config" {
@@ -26,5 +26,5 @@ resource "local_file" "ssh_config" {
   })
   filename = "${local.home_dir}/.ssh/config.d/${var.game_server_type}"
 
-  depends_on = [ null_resource.add_ssh_key_to_ssh_folder ]
+  depends_on = [null_resource.add_ssh_key_to_ssh_folder]
 }
