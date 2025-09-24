@@ -34,9 +34,15 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Anisble
+# Ansible
 # ignore tmp folder
 tmp/*
 age.key
 .vscode*
 ssh_config
+
+# Packer
+# Environment files with secrets
+**/.env
+*.pkrvars.hcl
+packer.log

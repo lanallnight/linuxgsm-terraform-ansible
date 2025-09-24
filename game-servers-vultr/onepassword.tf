@@ -12,6 +12,11 @@ resource "onepassword_item" "this" {
   section {
     label = "Credential metadata"
   }
+
+  lifecycle {
+    # Ignore conflicts during destroy operations
+    ignore_changes = [vault]
+  }
 }
 
 resource "onepassword_item" "server_config" {
@@ -38,6 +43,13 @@ resource "onepassword_item" "server_config" {
       EOT
     }
   }
+
+  lifecycle {
+    # Ignore conflicts during destroy operations
+    ignore_changes = [vault]
+  }
+
+  depends_on = [onepassword_item.this]
 }
 
 data "onepassword_item" "steam_login" {
