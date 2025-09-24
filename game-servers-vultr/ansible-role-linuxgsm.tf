@@ -4,15 +4,15 @@ resource "null_resource" "linuxgsm_install" {
     always_run = timestamp()
   }
   provisioner "local-exec" {
-      environment = {
-        GAME_SERVER_TYPE             = var.game_server_type,
-        STEAM_USERNAME               = data.onepassword_item.steam_login.username,
-        STEAM_PASSWORD               = data.onepassword_item.steam_login.password,
-        GAME_SERVER_PRIVATE_PASSWORD = data.onepassword_item.server_login.password,
-        CS2SERVER_ID_HASH            = data.onepassword_item.cs2server_id_hash.password,
-        CSGO_ID_HASH                 = data.onepassword_item.csgo_id_hash.password,
-        TF2_ID_HASH                  = data.onepassword_item.tf2_id_hash.password,
-        DISCORD_WEBHOOK              = data.onepassword_item.discord_webhook.password
+    environment = {
+      GAME_SERVER_TYPE             = var.game_server_type,
+      STEAM_USERNAME               = data.onepassword_item.steam_login.username,
+      STEAM_PASSWORD               = data.onepassword_item.steam_login.password,
+      GAME_SERVER_PRIVATE_PASSWORD = data.onepassword_item.server_login.password,
+      CS2SERVER_ID_HASH            = data.onepassword_item.cs2server_id_hash.password,
+      CSGO_ID_HASH                 = data.onepassword_item.csgo_id_hash.password,
+      TF2_ID_HASH                  = data.onepassword_item.tf2_id_hash.password,
+      DISCORD_WEBHOOK              = data.onepassword_item.discord_webhook.password
     }
 
     command = <<EOF
@@ -37,7 +37,7 @@ EOF
 }
 
 variable "run_tags" {
-  type = string
+  type    = string
   default = ""
 }
 

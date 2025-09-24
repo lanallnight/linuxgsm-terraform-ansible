@@ -109,7 +109,6 @@ Each game server has its own `.tfvars` file in the `tfvars/` directory:
 # Example: minecraft.tfvars
 game_server_type = "mcserver"
 instance_size = "vc2-2c-4gb"
-snapshot_id = ""  # Leave empty for fresh OS install
 ```
 
 ### Available Instance Sizes

@@ -1,7 +1,7 @@
 resource "onepassword_item" "this" {
   vault = var.lan_vault
 
-  title    = "${ var.game_server_type } Instance Password"
+  title    = "${var.game_server_type} Instance Password"
   category = "password"
 
   password_recipe {
@@ -22,10 +22,10 @@ resource "onepassword_item" "this" {
 resource "onepassword_item" "server_config" {
   vault = var.lan_vault
 
-  title    = "${ var.game_server_type } SSH Config & Key"
+  title    = "${var.game_server_type} SSH Config & Key"
   category = "password"
 
-  password = "${ tls_private_key.this.private_key_openssh }"
+  password = tls_private_key.this.private_key_openssh
 
   section {
     label = "Credential metadata"
