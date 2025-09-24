@@ -6,12 +6,12 @@ on:
     paths:
       - '**.tf'
       - '**.tfvars'
-      - '.github/workflows/terraform-lint.yml'
+      - '.github/workflows/terraform-validate.yml'
   pull_request:
     paths:
       - '**.tf'
       - '**.tfvars'
-      - '.github/workflows/terraform-lint.yml'
+      - '.github/workflows/terraform-validate.yml'
 
 jobs:
   lint:
@@ -26,10 +26,26 @@ jobs:
       uses: hashicorp/setup-terraform@v3
 
     - name: Format Check
-      run: terraform fmt -check -recursive
+      id: fmt
+      run: |
+        cd game-servers-vultr
+        terraform fmt -check -recursive
+      continue-on-error: true
+
+    - name: Format Check Results
+      if: steps.fmt.outcome == 'failure'
+      run: |
+        echo "❌ Terraform files need formatting!"
+        echo "Run the following command to fix formatting:"
+        echo "  cd game-servers-vultr && terraform fmt -recursive"
+        exit 1
 
     - name: Init
-      run: terraform init -backend=false
+      run: |
+        cd game-servers-vultr
+        terraform init -backend=false
 
     - name: Validate
-      run: terraform validate
+      run: |
+        cd game-servers-vultr
+        terraform validate
